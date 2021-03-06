@@ -1,16 +1,16 @@
 <template lang="pug">
   .container
     div.text-left
-      h1.title Nenad Bursać
-      h2.subtitle Frontend Developer
+      h1.title Contact
+      h2.subtitle Page
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import Component from 'vue-class-component'
+import Component from 'nuxt-class-component'
 
 @Component
-export default class HomePage extends Vue {}
+export default class ContactPage extends Vue {}
 </script>
 
 <style>
