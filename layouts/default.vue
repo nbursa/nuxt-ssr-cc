@@ -8,8 +8,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import AppFooter from '@/components/layout/AppFooter'
-import AppNavbar from '@/components/layout/AppNavbar'
+import AppFooter from '~/components/layout/AppNavbar.vue'
+import AppNavbar from '~/components/layout/AppNavbar.vue'
 
 @Component({
   components: {

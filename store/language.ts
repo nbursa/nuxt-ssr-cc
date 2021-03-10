@@ -5,7 +5,7 @@ import { Module, VuexModule, Mutation } from 'vuex-module-decorators'
   stateFactory: true,
   namespaced: true,
 })
-class Language extends VuexModule {
+export default class Language extends VuexModule {
   language = 'en'
 
   @Mutation
