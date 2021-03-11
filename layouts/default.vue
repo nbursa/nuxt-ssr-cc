@@ -6,9 +6,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import AppFooter from '~/components/layout/AppNavbar.vue'
+import { Component, Vue } from 'vue-property-decorator'
+import AppFooter from '~/components/layout/AppFooter.vue'
 import AppNavbar from '~/components/layout/AppNavbar.vue'
 
 @Component({

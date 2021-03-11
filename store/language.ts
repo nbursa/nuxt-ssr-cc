@@ -6,14 +6,15 @@ import { Module, VuexModule, Mutation } from 'vuex-module-decorators'
   namespaced: true,
 })
 export default class Language extends VuexModule {
-  language = 'en'
+  lang = 'en'
+  languages = ['sr', 'en']
 
   @Mutation
   setLanguage(lang: string) {
-    this.language = lang
+    this.lang = lang
   }
 
   get languageValue() {
-    return this.language
+    return this.lang
   }
 }

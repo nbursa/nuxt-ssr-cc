@@ -1,74 +1,130 @@
 <template lang="pug">
   .container
-    //.contact
-    //  .form-body
-    //    form.form.animated.bounceInLeft
-    //      h2 {{ $translate('contact.title') }}
-    //      .form-inputs
-    //        .form-inputs__field
-    //          input.form-inputs__field-input.in-fi(
-    //            v-model="form.name",
-    //            type="text",
-    //            name="name",
-    //            id="ime",
-    //            data-errormessage-value-missing="Required",
-    //            data-errormessage-type-mismatch="Too short",
-    //            placeholder=" ",
-    //            required="",
-    //            @mouseenter="inputHoverEvent",
-    //            @mouseleave="inputLeaveEvent"
-    //          )
-    //          label(for="ime") {{ $translate('contact.form_name') }}
-    //        .input__field
-    //          input.form-inputs__field-input.in-fi(
-    //            v-model="form.mail",
-    //            type="email",
-    //            name="mail",
-    //            id="mail",
-    //            data-errormessage="Enter valid email address i.e. example@example.com",
-    //            placeholder=" ",
-    //            required="",
-    //            @mouseenter="inputHoverEvent",
-    //            @mouseleave="inputLeaveEvent"
-    //          )
-    //          label(for="mail") {{ $translate('contact.form_email') }}
-    //        .input__field
-    //          textarea.form-inputs__field-textarea.in-fi(
-    //            v-model="form.poruka",
-    //            name="poruka",
-    //            cols="50",
-    //            id="poruka",
-    //            placeholder=" ",
-    //            required="",
-    //            @mouseenter="inputHoverEvent",
-    //            @mouseleave="inputLeaveEvent"
-    //          )
-    //          label(for="poruka") {{ $translate('contact.form_message') }}
-    //  .form-controls.animated.bounceInRight
-    //    button.btn(
-    //      type="submit",
-    //      @click.prevent="submitForm()",
-    //      @mouseover="hoverEvent",
-    //      @mouseleave="leaveEvent"
-    //    ) {{ $translate('contact.form_send') }}
-    //    .form-messages
-    //    .inline
-    //      router-link.link.openpop(
-    //        to="/request",
-    //        @mouseover.native="hoverEvent",
-    //        @mouseleave.native="leaveEvent"
-    //      ) {{ $translate('contact.form_contact') }}
-    div.text-left
-      h1.title Contact
-      h2.subtitle Page
+    .contact
+      .form-body
+        form.form.animated.bounceInLeft
+          h2 {{ $translate('contact.title') }}
+          .form-inputs
+            .form-inputs__field
+              base-input(
+                :value="form[name]"
+                :id="'name'"
+                :placeholder="'Name'"
+                :required="true"
+                :label="$translate('contact.form_name')"
+                @mouseenter="inputHoverEvent"
+                @mouseleave="inputLeaveEvent"
+                @change="form.name = value"
+              )
+            .input__field
+              base-input(
+                :value="form[mail]"
+                :id="'mail'"
+                :placeholder="'Mail'"
+                :required="true"
+                :label="$translate('contact.form_email')"
+                @mouseenter="inputHoverEvent"
+                @mouseleave="inputLeaveEvent"
+                @change="form.mail = value"
+              )
+            .input__field
+              textarea.form-inputs__field-textarea.in-fi(
+                :value="form[message]"
+                name="message"
+                cols="50"
+                id="message"
+                placeholder="Message"
+                required="false"
+                @mouseenter="inputHoverEvent"
+                @mouseleave="inputLeaveEvent"
+                @change="form.message = value"
+              )
+              label(for="message") {{ $translate('contact.form_message') }}
+      .form-controls.animated.bounceInRight
+        button.btn(
+          type="submit",
+          @click="submitForm()",
+          @mouseover="hoverEvent",
+          @mouseleave="leaveEvent"
+        ) {{ $translate('contact.form_send') }}
+        .form-messages
+        .inline
+          router-link.link.openpop(
+            to="/request",
+            @mouseover.native="hoverEvent",
+            @mouseleave.native="leaveEvent"
+          ) {{ $translate('contact.form_contact') }}
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'nuxt-class-component'
+import { Component, Mixins } from 'vue-property-decorator'
+import translateMixin from '~/plugins/translate.mixin.ts'
+import BaseInput from '~/components/base/BaseInput.vue'
 
-@Component
-export default class ContactPage extends Vue {}
+interface Form {
+  name: string
+  mail: string
+  message: string
+}
+
+// @BaseInput
+@Component({
+  components: {
+    BaseInput,
+  },
+})
+export default class ContactPage extends Mixins(translateMixin) {
+  url: string = '../email/Contact.php'
+  form: Form = {
+    name: '',
+    mail: '',
+    message: '',
+  }
+
+  hoverEvent(e): void {
+    this.$emit('hoverEvent', e)
+  }
+
+  leaveEvent(e): void {
+    this.$emit('leaveEvent', e)
+  }
+
+  private inputHoverEvent(e): void {
+    this.$emit('inputHoverEvent', e)
+  }
+
+  private inputLeaveEvent(e): void {
+    this.$emit('inputLeaveEvent', e)
+  }
+
+  submitForm(): void {
+    const qs = require('qs')
+    this.$axios
+      .post(this.url, qs.stringify(this.form))
+      .then((response) => {
+        console.log(response.data)
+        this.form = {
+          name: '',
+          mail: '',
+          message: '',
+        }
+      })
+      .catch((error) => {
+        console.log('err; ', error)
+      })
+  }
+
+  updateFormItem(payload: object) {
+    const { formItem, value } = payload
+    console.log('name e: ', value)
+    this.form[formItem] = value
+  }
+
+  mailVal(e: string) {
+    console.log('mail e: ', e)
+    this.form.mail = e
+  }
+}
 </script>
 
 <style>
